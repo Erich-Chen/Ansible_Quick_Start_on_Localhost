@@ -1,0 +1,43 @@
+- hosts: 127.0.0.1
+  become: yes
+  tasks:
+    - name: Show System Distribution
+      debug: msg="{{ ansible_distribution }}"
+      
+    - name: Echo a message in the shell
+      shell: echo hello Ansible > /dev/tty
+
+    - name: Run the equivalent of "apt update", only when more than 1 day not updated 
+      apt:
+        update_cache: yes
+        cache_valid_time: 86400
+    
+    - name: install system updates, equivalent of "apt update" 
+      apt:
+        update_cache: yes
+    
+    - name: install a list of packages
+      apt:
+        state: latest
+        update_cache: yes
+        pkg:
+          - aptitude
+          - vim
+          - tmux
+          - wget
+          - curl
+          - git
+
+    - name: Update all packages to their latest version
+      apt:
+        name: "*"
+        state: latest
+        update_cache: yes
+
+    - name: Remove useless packages from the cache
+      apt:
+        autoclean: yes
+
+    - name: Remove dependencies that are no longer required
+      apt:
+        autoremove: yes
